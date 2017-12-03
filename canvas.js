@@ -9,8 +9,10 @@ window.onload = function() {
     var color = "lightgreen";
     var backgroundColor = "#222";
 
-    function setup() 
-    {
+    function draw() {
+        // clear canvas everytime
+        g.clearRect(0, 0, width, height);
+
         // background circle
         g.beginPath();
         g.strokeStyle = backgroundColor;
@@ -27,5 +29,30 @@ window.onload = function() {
         g.stroke();
     }
 
-    setup();
+    function animateValue() {
+        newDegrees = Math.round(Math.random()*360);
+        var difference = newDegrees - degrees;
+        //draw();
+        animationLoop = setInterval(animateTo, 1000/difference);
+    }
+
+    function animateTo() {
+        if (degrees < newDegrees) {
+            degrees++;
+        }
+        else {
+            degrees--;
+        }
+
+        if (degrees == newDegrees)  {
+            clearInterval(animationLoop);
+        }
+
+        draw();
+    }
+
+    draw();
+
+    valueLoop = setInterval(animateValue, 2000);
+
 }
