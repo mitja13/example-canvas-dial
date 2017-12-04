@@ -1,18 +1,26 @@
 window.onload = function() {
+
+    // setup canvas
     var canvas = document.getElementById("canvas");
     var g = canvas.getContext("2d");
 
     var width = canvas.width
     var height = canvas.height
 
+    // variables
     var degrees = 200;
+    var text;
+
+    // properties
     var color = "lightgreen";
     var backgroundColor = "#222";
 
-    var text;
+
+    /*
     var difference = 0;
     var newDegrees = 0;
     var animationValue, animationLoop;
+    */
 
     function draw() {
         // clear canvas everytime
@@ -42,28 +50,5 @@ window.onload = function() {
         
     }
 
-    function animateValue() {
-        newDegrees = Math.round(Math.random()*360);
-        difference = newDegrees - degrees;
-        animationLoop = setInterval(animateTo, 1000/difference);
-    }
-
-    function animateTo() {
-        if (degrees < newDegrees) {
-            degrees++;
-        }
-        else {
-            degrees--;
-        }
-
-        if (degrees == newDegrees)  {
-            clearInterval(animationLoop);
-        }
-
-        draw();
-    }
-
     draw();
-
-    valueLoop = setInterval(animateValue, 2000);
 }
