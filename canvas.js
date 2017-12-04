@@ -13,7 +13,7 @@ window.requestAnimFrame = (function() {
 
 // variables
 var g;
-var degrees = 190;
+var degrees = 230;
 var text;
 
 // properties
@@ -22,7 +22,7 @@ var backgroundColor = "#222";
 
 window.onload = function() {
     setupCanvas();
-    draw();
+    //draw();
 }
 
 function setupCanvas() {
