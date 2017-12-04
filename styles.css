@@ -7,9 +7,3 @@ body {
     width: 300px;
     margin: 100px auto;
 }
-
-
-@font-face {
-    font-family: roboto;
-    src: url('https://fonts.googleapis.com/css?family=Roboto+Mono:700');
-}
