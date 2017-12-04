@@ -1,12 +1,5 @@
 window.onload = function() {
 
-    // setup canvas
-    var canvas = document.getElementById("canvas");
-    var g = canvas.getContext("2d");
-
-    var width = canvas.width
-    var height = canvas.height
-
     // variables
     var degrees = 200;
     var text;
@@ -14,6 +7,13 @@ window.onload = function() {
     // properties
     var color = "lightgreen";
     var backgroundColor = "#222";
+
+    // setup canvas
+    var canvas = document.getElementById("canvas");
+    var g = canvas.getContext("2d");
+
+    var width = canvas.width
+    var height = canvas.height
 
     function draw() {
         // clear canvas everytime
