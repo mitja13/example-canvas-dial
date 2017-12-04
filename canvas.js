@@ -13,12 +13,14 @@ window.requestAnimFrame = (function() {
 
 // variables
 var g;
-var degrees = 230;
+var degrees = 100;
 var text;
 
 // properties
 var color = "lightgreen";
 var backgroundColor = "#222";
+
+var isDragging
 
 window.onload = function() {
     setupCanvas();
@@ -32,9 +34,14 @@ function setupCanvas() {
 
 function setupEvents() {
     var canvas = document.getElementById("canvas");
+
     canvas.addEventListener("mousedown", function(event) {
         var pos = getMousePosition(canvas, event);
-	}, false);
+    }, false);
+    
+    canvas.addEventListener("mouseup", function(event) {
+
+    }, false);
 }
 
 function getMousePosition(canvas, event) {
@@ -48,6 +55,7 @@ function getMousePosition(canvas, event) {
 function draw() {
     var width = canvas.width
     var height = canvas.height
+    var radians = degrees * Math.PI / 180;
 
     // clear canvas everytime
     g.clearRect(0, 0, width, height);
@@ -60,7 +68,6 @@ function draw() {
     g.stroke();
 
     // gauge will be a simple arc
-    var radians = degrees * Math.PI / 180;
     g.beginPath();
     g.strokeStyle = color;
     g.lineWidth = 30;
@@ -73,7 +80,17 @@ function draw() {
     text = Math.floor(degrees/360*100) + '%';
     textWidth = g.measureText(text).width;
     g.fillText(text, width/2 - textWidth/2, height/2 + 20);
-    
+
+    // gauge control button
+    var dx = 100 * Math.cos(radians - 0.5*Math.PI);
+    var dy = 100 * Math.sin(radians - 0.5*Math.PI);
+    g.beginPath();
+    g.lineWidth = 2;
+    g.strokeStyle = "#d3d3d3";
+    g.fillStyle = "#fff";
+    g.arc(width/2 + dx, height/2 + dy, 20, 0, 2*Math.PI, false);
+    g.fill();
+    g.stroke();
 }
 
 (function drawLoop() {
