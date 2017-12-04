@@ -22,12 +22,27 @@ var backgroundColor = "#222";
 
 window.onload = function() {
     setupCanvas();
-    //draw();
+    setupEvents();
 }
 
 function setupCanvas() {
     var canvas = document.getElementById("canvas");
     g = canvas.getContext("2d");
+}
+
+function setupEvents() {
+    var canvas = document.getElementById("canvas");
+    canvas.addEventListener("mousedown", function(event) {
+        var pos = getMousePosition(canvas, event);
+	}, false);
+}
+
+function getMousePosition(canvas, event) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+    };
 }
 
 function draw() {
