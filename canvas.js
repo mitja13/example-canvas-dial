@@ -9,6 +9,11 @@ window.onload = function() {
     var color = "lightgreen";
     var backgroundColor = "#222";
 
+    var text;
+    var difference = 0;
+    var newDegrees = 0;
+    var animationValue, animationLoop;
+
     function draw() {
         // clear canvas everytime
         g.clearRect(0, 0, width, height);
@@ -27,12 +32,19 @@ window.onload = function() {
         g.lineWidth = 30;
         g.arc(width/2, height/2, 100, -0.5*Math.PI, radians -0.5*Math.PI, false);
         g.stroke();
+
+        // text to display value
+        g.fillStyle = color;
+        g.font = "50px helvetica";
+        text = Math.floor(degrees/360*100) + '%';
+        textWidth = g.measureText(text).width;
+        g.fillText(text, width/2 - textWidth/2, height/2 + 20);
+        
     }
 
     function animateValue() {
         newDegrees = Math.round(Math.random()*360);
-        var difference = newDegrees - degrees;
-        //draw();
+        difference = newDegrees - degrees;
         animationLoop = setInterval(animateTo, 1000/difference);
     }
 
@@ -54,5 +66,4 @@ window.onload = function() {
     draw();
 
     valueLoop = setInterval(animateValue, 2000);
-
 }
