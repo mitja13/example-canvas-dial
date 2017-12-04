@@ -85,9 +85,9 @@ function draw() {
     var dx = 100 * Math.cos(radians - 0.5*Math.PI);
     var dy = 100 * Math.sin(radians - 0.5*Math.PI);
     g.beginPath();
-    g.lineWidth = 2;
-    g.strokeStyle = "#d3d3d3";
-    g.fillStyle = "#fff";
+    g.lineWidth = 1;
+    g.strokeStyle = "silver";
+    g.fillStyle = "ghostwhite";
     g.arc(width/2 + dx, height/2 + dy, 20, 0, 2*Math.PI, false);
     g.fill();
     g.stroke();
