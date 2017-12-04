@@ -15,13 +15,6 @@ window.onload = function() {
     var color = "lightgreen";
     var backgroundColor = "#222";
 
-
-    /*
-    var difference = 0;
-    var newDegrees = 0;
-    var animationValue, animationLoop;
-    */
-
     function draw() {
         // clear canvas everytime
         g.clearRect(0, 0, width, height);
