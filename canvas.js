@@ -49,6 +49,7 @@ function setupEvents() {
         if (isMoving) {
             var position = getPositionFrom(event);
             degrees = getDegreesFrom(position);
+            console.log(degrees);
         }
 	}, false);
 }
@@ -65,6 +66,7 @@ function getDegreesFrom(position) {
     var dx = position.x - canvas.width/2;
     var dy = position.y - canvas.height/2;
     var radians = Math.atan2(dy, dx) + 0.5*Math.PI;
+    if (radians < 0) radians += 2*Math.PI;
     var degrees = radians * 180 / Math.PI;
     return degrees;
 }
