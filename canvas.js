@@ -36,12 +36,11 @@ function setupCanvas() {
 function setupEvents() {
 
     canvas.addEventListener("mousedown", function(event) {
-        console.log("mousedown");
-        isMoving = true;
+        var position = getPositionFrom(event);
+        if (hitTest(position)) isMoving = true;
     }, false);
     
     canvas.addEventListener("mouseup", function(event) {
-        console.log("mouseup");
         isMoving = false;
     }, false);
 
@@ -49,7 +48,6 @@ function setupEvents() {
         if (isMoving) {
             var position = getPositionFrom(event);
             degrees = getDegreesFrom(position);
-            console.log(degrees);
         }
 	}, false);
 }
@@ -72,7 +70,14 @@ function getDegreesFrom(position) {
 }
 
 function hitTest(position) {
-
+    var radians = degrees * Math.PI / 180;
+    var centerX = 100 * Math.cos(radians - 0.5*Math.PI);
+    var centerY = 100 * Math.sin(radians - 0.5*Math.PI);
+    var center = { x: canvas.width/2 + centerX, y: canvas.height/2 + centerY };
+    var dx = center.x - position.x;
+    var dy = center.y - position.y;
+    var distance = Math.sqrt(dx*dx + dy*dy);
+    return distance < 20;
 }
 
 function draw() {
