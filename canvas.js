@@ -13,14 +13,15 @@ window.requestAnimFrame = (function() {
 
 // variables
 var g;
-var degrees = 100;
+var canvas;
+var degrees = 200;
 var text;
 
 // properties
 var color = "lightgreen";
 var backgroundColor = "#222";
 
-var isDragging
+var isMoving = false;
 
 window.onload = function() {
     setupCanvas();
@@ -28,28 +29,48 @@ window.onload = function() {
 }
 
 function setupCanvas() {
-    var canvas = document.getElementById("canvas");
+    canvas = document.getElementById("canvas");
     g = canvas.getContext("2d");
 }
 
 function setupEvents() {
-    var canvas = document.getElementById("canvas");
 
     canvas.addEventListener("mousedown", function(event) {
-        var pos = getMousePosition(canvas, event);
+        console.log("mousedown");
+        isMoving = true;
     }, false);
     
     canvas.addEventListener("mouseup", function(event) {
-
+        console.log("mouseup");
+        isMoving = false;
     }, false);
+
+	canvas.addEventListener("mousemove", function (event) {
+        if (isMoving) {
+            var position = getPositionFrom(event);
+            degrees = getDegreesFrom(position);
+        }
+	}, false);
 }
 
-function getMousePosition(canvas, event) {
+function getPositionFrom(event) {
     var rect = canvas.getBoundingClientRect();
     return {
         x: event.clientX - rect.left,
         y: event.clientY - rect.top
     };
+}
+
+function getDegreesFrom(position) {
+    var dx = position.x - canvas.width/2;
+    var dy = position.y - canvas.height/2;
+    var radians = Math.atan2(dy, dx) + 0.5*Math.PI;
+    var degrees = radians * 180 / Math.PI;
+    return degrees;
+}
+
+function hitTest(position) {
+
 }
 
 function draw() {
@@ -71,7 +92,7 @@ function draw() {
     g.beginPath();
     g.strokeStyle = color;
     g.lineWidth = 30;
-    g.arc(width/2, height/2, 100, -0.5*Math.PI, radians -0.5*Math.PI, false);
+    g.arc(width/2, height/2, 100, -0.5*Math.PI, radians - 0.5*Math.PI, false);
     g.stroke();
 
     // text to display value
@@ -91,6 +112,8 @@ function draw() {
     g.arc(width/2 + dx, height/2 + dy, 20, 0, 2*Math.PI, false);
     g.fill();
     g.stroke();
+
+    //TODO: draw 50 tick lines
 }
 
 (function drawLoop() {
