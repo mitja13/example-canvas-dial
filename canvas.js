@@ -49,7 +49,9 @@ function setupEvents() {
             var position = getPositionFrom(event);
             degrees = getDegreesFrom(position);
         }
-	}, false);
+    }, false);
+    
+    //TODO: test on mobile
 }
 
 function getPositionFrom(event) {
@@ -109,6 +111,13 @@ function draw() {
     textWidth = g.measureText(text).width;
     g.fillText(text, width/2 - textWidth/2, height/2 + 20);
 
+    // draw 50 tick lines
+    var angles = [0, Math.PI/2];
+    for(var i = 0; i < 50; i++) {
+        angles[i] = 2*Math.PI / 50 * i;
+    }
+    angles.forEach(drawTick);
+
     // gauge control button
     var dx = 100 * Math.cos(radians - 0.5*Math.PI);
     var dy = 100 * Math.sin(radians - 0.5*Math.PI);
@@ -119,8 +128,24 @@ function draw() {
     g.arc(width/2 + dx, height/2 + dy, 20, 0, 2*Math.PI, false);
     g.fill();
     g.stroke();
+}
 
-    //TODO: draw 50 tick lines
+function drawTick(angle) {
+    var bodyStyle = window.getComputedStyle(document.body, null);
+    var lenght = 30
+    var point1X = (100 - lenght/2) * Math.cos(angle - 0.5*Math.PI);
+    var point1Y = (100 - lenght/2) * Math.sin(angle - 0.5*Math.PI);    
+    var point2X = (100 + lenght/2) * Math.cos(angle - 0.5*Math.PI);
+    var point2Y = (100 + lenght/2) * Math.sin(angle - 0.5*Math.PI);
+    var center = { x: canvas.width/2, y: canvas.height/2}
+    var point1 = { x: center.x + point1X, y: center.y + point1Y };
+    var point2 = { x: center.y + point2X, y: center.y + point2Y };
+    g.beginPath();
+    g.strokeStyle = bodyStyle.backgroundColor;
+    g.lineWidth = 3;
+    g.moveTo(point1.x, point1.y);
+    g.lineTo(point2.x, point2.y);
+    g.stroke();
 }
 
 (function drawLoop() {
