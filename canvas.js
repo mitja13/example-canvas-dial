@@ -1,27 +1,15 @@
+//
+//  Dial Gauge Control
+//
+//  Created by Mitja Semolic on 6.12.2017.
+//  Copyright © 2017 Mitja Semolic. All rights reserved.
+//
 
-
-var CANVAS;
-var G;
-var DIAL;
-
-window.onload = function() {
-    //TODO: container
-    CANVAS = document.getElementById("canvas");
-    G = canvas.getContext("2d");
-
-    DIAL = new Dial({
-        radius: 100,
-		min: 0, max: 100, step: 1,
-		color: "lightgreen"
-    })
-    
-    DIAL.value = 5;
-    DIAL.listenEvents();
-}
 
 class Dial {
 
-    constructor({radius = 100, min = 1, max = 10, step = 1, color = "red"}) {
+    constructor({canvas, radius = 100, min = 1, max = 10, step = 1, color = "red"}) {
+        this.canvas = document.getElementById(canvas);
         this.radius = radius;
         this.min = min;
         this.max = max;
@@ -32,6 +20,7 @@ class Dial {
         this.degrees;
         this.isMoving = false;
         this.dialColor = "silver";
+        this.showText = true;
     }
 
     get value() {
@@ -44,9 +33,9 @@ class Dial {
     } 
 
     listenEvents() {
-        CANVAS.addEventListener("mousedown", event => { DIAL.handleTapDown(event) }, false);
-        CANVAS.addEventListener("mouseup", event => { DIAL.handleTapUp(event) }, false);
-        CANVAS.addEventListener("mousemove", event => { DIAL.handlePan(event) }, false);
+        this.canvas.addEventListener("mousedown", event => { DIAL.handleTapDown(event) }, false);
+        this.canvas.addEventListener("mouseup", event => { DIAL.handleTapUp(event) }, false);
+        this.canvas.addEventListener("mousemove", event => { DIAL.handlePan(event) }, false);
     }
 
     handleTapDown(event) {
@@ -68,7 +57,7 @@ class Dial {
     }
 
     getPositionFrom(event) {
-        let rect = CANVAS.getBoundingClientRect();
+        let rect = this.canvas.getBoundingClientRect();
         return {
             x: event.clientX - rect.left,
             y: event.clientY - rect.top
@@ -76,8 +65,8 @@ class Dial {
     }
 
     getDegreesFrom(position) {
-        let dx = position.x - CANVAS.width/2;
-        let dy = position.y - CANVAS.height/2;
+        let dx = position.x - this.canvas.width/2;
+        let dy = position.y - this.canvas.height/2;
         let radians = Math.atan2(dy, dx) + 0.5*Math.PI;
         if (radians < 0) radians += 2*Math.PI;
         let degrees = radians * 180 / Math.PI;
@@ -88,41 +77,49 @@ class Dial {
         let radians = this.degrees * Math.PI / 180;
         let centerX = this.radius * Math.cos(radians - 0.5*Math.PI);
         let centerY = this.radius * Math.sin(radians - 0.5*Math.PI);
-        let center = { x: canvas.width/2 + centerX, y: canvas.height/2 + centerY };
+        let center = { x: this.canvas.width/2 + centerX, y: this.canvas.height/2 + centerY };
         let dx = center.x - position.x;
         let dy = center.y - position.y;
         let distance = Math.sqrt(dx*dx + dy*dy);
         return distance < 25;
     }
 
+    /* TODO
+    hitTestDial(position) {
+
+    }*/
+
     draw() {
-        let width = CANVAS.width
-        let height = CANVAS.height
+        let width = this.canvas.width;
+        let height = this.canvas.height;
         let radians = this.degrees * Math.PI / 180;
+        let g = this.canvas.getContext("2d");
 
         // clear canvas everytime
-        G.clearRect(0, 0, width, height);
+        g.clearRect(0, 0, width, height);
 
         // background circle
-        G.beginPath();
-        G.strokeStyle = this.dialColor;
-        G.lineWidth = 30;
-        G.arc(width/2, height/2, this.radius, 0, 2*Math.PI, false);
-        G.stroke();
+        g.beginPath();
+        g.strokeStyle = this.dialColor;
+        g.lineWidth = 30;
+        g.arc(width/2, height/2, this.radius, 0, 2*Math.PI, false);
+        g.stroke();
 
         // gauge will be a simple arc
-        G.beginPath();
-        G.strokeStyle = this.color;
-        G.lineWidth = 30;
-        G.arc(width/2, height/2, this.radius, -0.5*Math.PI, radians - 0.5*Math.PI, false);
-        G.stroke();
+        g.beginPath();
+        g.strokeStyle = this.color;
+        g.lineWidth = 30;
+        g.arc(width/2, height/2, this.radius, -0.5*Math.PI, radians - 0.5*Math.PI, false);
+        g.stroke();
 
         // text to display value
-        G.fillStyle = this.color;
-        G.font = "50px helvetica";
-        let text = this.value;
-        let textWidth = G.measureText(text).width;
-        G.fillText(text, width/2 - textWidth/2, height/2 + 20);
+        if (this.showText) {
+            g.fillStyle = this.color;
+            g.font = "50px helvetica";
+            let text = this.value;
+            let textWidth = g.measureText(text).width;
+            g.fillText(text, width/2 - textWidth/2, height/2 + 20);
+        }
 
         // draw 50 tick lines
         let ticks = Math.round((this.max - this.min) / this.step) + this.step;
@@ -134,16 +131,17 @@ class Dial {
         // gauge control button
         let dx = this.radius * Math.cos(radians - 0.5*Math.PI);
         let dy = this.radius * Math.sin(radians - 0.5*Math.PI);
-        G.beginPath();
-        G.lineWidth = 1;
-        G.strokeStyle = "silver";
-        G.fillStyle = "ghostwhite";
-        G.arc(width/2 + dx, height/2 + dy, 20, 0, 2*Math.PI, false);
-        G.fill();
-        G.stroke();
+        g.beginPath();
+        g.lineWidth = 1;
+        g.strokeStyle = "silver";
+        g.fillStyle = "ghostwhite";
+        g.arc(width/2 + dx, height/2 + dy, 20, 0, 2*Math.PI, false);
+        g.fill();
+        g.stroke();
     }
 
     drawTick(angle) {
+        let g = this.canvas.getContext("2d");
         let bodyStyle = window.getComputedStyle(document.body, null);
         let lenght = 31;
         let point1X = (this.radius - lenght/2) * Math.cos(angle - 0.5*Math.PI);
@@ -153,13 +151,28 @@ class Dial {
         let center = { x: canvas.width/2, y: canvas.height/2}
         let point1 = { x: center.x + point1X, y: center.y + point1Y };
         let point2 = { x: center.y + point2X, y: center.y + point2Y };
-        G.beginPath();
-        G.strokeStyle = bodyStyle.backgroundColor;
-        G.lineWidth = this.max < 100 ? 3 : 1.5;
-        G.moveTo(point1.x, point1.y);
-        G.lineTo(point2.x, point2.y);
-        G.stroke();
+        g.beginPath();
+        g.strokeStyle = bodyStyle.backgroundColor;
+        g.lineWidth = this.max < 100 ? 3 : 1.5;
+        g.moveTo(point1.x, point1.y);
+        g.lineTo(point2.x, point2.y);
+        g.stroke();
     }
+}
+
+var DIAL;
+
+window.onload = function() {
+
+    DIAL = new Dial({
+        canvas: "canvas",
+        radius: 100,
+		min: 0, max: 25, step: 1,
+		color: "lightgreen"
+    });
+    
+    DIAL.value = 5;
+    DIAL.listenEvents();
 }
 
 // get interval to draw on screen
@@ -173,8 +186,6 @@ window.requestAnimFrame = (function() {
 })();
 
 (function loopDraw() {
-    if (G != undefined) {
-        DIAL.draw();
-    }
+    if (DIAL != undefined) DIAL.draw();
     requestAnimFrame(loopDraw);
 })();
