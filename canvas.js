@@ -29,7 +29,7 @@ class Dial {
     }
 
     handleTapDown(event) {
-        var position = this.getPositionFrom(event);
+        let position = this.getPositionFrom(event);
         if (this.hitTestButton(position)) {
             this.isMoving = true;
         }
@@ -41,13 +41,13 @@ class Dial {
 
     handlePan(event) {
         if (this.isMoving) {
-            var position = this.getPositionFrom(event);
+            let position = this.getPositionFrom(event);
             this.degrees = this.getDegreesFrom(position);
         }
     }
 
     getPositionFrom(event) {
-        var rect = CANVAS.getBoundingClientRect();
+        let rect = CANVAS.getBoundingClientRect();
         return {
             x: event.clientX - rect.left,
             y: event.clientY - rect.top
@@ -55,29 +55,29 @@ class Dial {
     }
 
     getDegreesFrom(position) {
-        var dx = position.x - CANVAS.width/2;
-        var dy = position.y - CANVAS.height/2;
-        var radians = Math.atan2(dy, dx) + 0.5*Math.PI;
+        let dx = position.x - CANVAS.width/2;
+        let dy = position.y - CANVAS.height/2;
+        let radians = Math.atan2(dy, dx) + 0.5*Math.PI;
         if (radians < 0) radians += 2*Math.PI;
-        var degrees = radians * 180 / Math.PI;
+        let degrees = radians * 180 / Math.PI;
         return degrees;
     }
 
     hitTestButton(position) {
-        var radians = this.degrees * Math.PI / 180;
-        var centerX = this.radius * Math.cos(radians - 0.5*Math.PI);
-        var centerY = this.radius * Math.sin(radians - 0.5*Math.PI);
-        var center = { x: canvas.width/2 + centerX, y: canvas.height/2 + centerY };
-        var dx = center.x - position.x;
-        var dy = center.y - position.y;
-        var distance = Math.sqrt(dx*dx + dy*dy);
+        let radians = this.degrees * Math.PI / 180;
+        let centerX = this.radius * Math.cos(radians - 0.5*Math.PI);
+        let centerY = this.radius * Math.sin(radians - 0.5*Math.PI);
+        let center = { x: canvas.width/2 + centerX, y: canvas.height/2 + centerY };
+        let dx = center.x - position.x;
+        let dy = center.y - position.y;
+        let distance = Math.sqrt(dx*dx + dy*dy);
         return distance < 25;
     }
 
     draw() {
-        var width = CANVAS.width
-        var height = CANVAS.height
-        var radians = this.degrees * Math.PI / 180;
+        let width = CANVAS.width
+        let height = CANVAS.height
+        let radians = this.degrees * Math.PI / 180;
 
         // clear canvas everytime
         G.clearRect(0, 0, width, height);
@@ -100,18 +100,18 @@ class Dial {
         G.fillStyle = this.color;
         G.font = "50px helvetica";
         this.text = Math.floor(this.degrees/360*100) + '%';
-        var textWidth = G.measureText(this.text).width;
+        let textWidth = G.measureText(this.text).width;
         G.fillText(this.text, width/2 - textWidth/2, height/2 + 20);
 
         // draw 50 tick lines
-        for(var i = 0; i < 50; i++) {
-            var angle = 2*Math.PI / 50 * i;
+        for(let i = 0; i < 50; i++) {
+            let angle = 2*Math.PI / 50 * i;
             this.drawTick(angle);
         }
 
         // gauge control button
-        var dx = this.radius * Math.cos(radians - 0.5*Math.PI);
-        var dy = this.radius * Math.sin(radians - 0.5*Math.PI);
+        let dx = this.radius * Math.cos(radians - 0.5*Math.PI);
+        let dy = this.radius * Math.sin(radians - 0.5*Math.PI);
         G.beginPath();
         G.lineWidth = 1;
         G.strokeStyle = "silver";
@@ -122,15 +122,15 @@ class Dial {
     }
 
     drawTick(angle) {
-        var bodyStyle = window.getComputedStyle(document.body, null);
-        var lenght = 31;
-        var point1X = (this.radius - lenght/2) * Math.cos(angle - 0.5*Math.PI);
-        var point1Y = (this.radius - lenght/2) * Math.sin(angle - 0.5*Math.PI);    
-        var point2X = (this.radius + lenght/2) * Math.cos(angle - 0.5*Math.PI);
-        var point2Y = (this.radius + lenght/2) * Math.sin(angle - 0.5*Math.PI);
-        var center = { x: canvas.width/2, y: canvas.height/2}
-        var point1 = { x: center.x + point1X, y: center.y + point1Y };
-        var point2 = { x: center.y + point2X, y: center.y + point2Y };
+        let bodyStyle = window.getComputedStyle(document.body, null);
+        let lenght = 31;
+        let point1X = (this.radius - lenght/2) * Math.cos(angle - 0.5*Math.PI);
+        let point1Y = (this.radius - lenght/2) * Math.sin(angle - 0.5*Math.PI);    
+        let point2X = (this.radius + lenght/2) * Math.cos(angle - 0.5*Math.PI);
+        let point2Y = (this.radius + lenght/2) * Math.sin(angle - 0.5*Math.PI);
+        let center = { x: canvas.width/2, y: canvas.height/2}
+        let point1 = { x: center.x + point1X, y: center.y + point1Y };
+        let point2 = { x: center.y + point2X, y: center.y + point2Y };
         G.beginPath();
         G.strokeStyle = bodyStyle.backgroundColor;
         G.lineWidth = 3;
@@ -149,7 +149,6 @@ window.requestAnimFrame = (function() {
         window.msRequestAnimationFrame     ||  
         function(callback) { window.setTimeout(callback, 1000 / 60) };
 })();
-
 
 (function loopDraw() {
     if (G != undefined) {
