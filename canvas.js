@@ -8,14 +8,25 @@ window.onload = function() {
     CANVAS = document.getElementById("canvas");
     G = canvas.getContext("2d");
 
-    DIAL = new Dial(100, "lightgreen");
+    //DIAL = new Dial(100, "lightgreen");
+
+    DIAL = new Dial({
+        radius: 100,
+		min: 1, max: 10, step: 1,
+		color: "lightgreen"
+    })
     DIAL.listenEvents();
 }
 
 class Dial {
-    constructor(radius, color) {
+
+    constructor({radius = 100, min = 1, max = 10, step = 1, color = "red"}) {
         this.radius = radius;
+        this.min = min;
+        this.max = max;
+        this.step = step;
         this.color = color;
+
         this.dialColor = "silver";
         this.text = "";
         this.degrees = 200;
