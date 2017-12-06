@@ -1,10 +1,9 @@
 //
-//  Dial Gauge Control
+//  Dial Control
 //
 //  MIT License
 //  Copyright © 2017 Mitja Semolic.
 //
-
 
 class Dial {
 
@@ -33,9 +32,9 @@ class Dial {
     } 
 
     listenEvents() {
-        this.canvas.addEventListener("mousedown", event => { DIAL.handleTapDown(event) }, false);
-        this.canvas.addEventListener("mouseup", event => { DIAL.handleTapUp(event) }, false);
-        this.canvas.addEventListener("mousemove", event => { DIAL.handlePan(event) }, false);
+        this.canvas.addEventListener("mousedown", event => { this.handleTapDown(event) }, false);
+        this.canvas.addEventListener("mouseup", event => { this.handleTapUp(event) }, false);
+        this.canvas.addEventListener("mousemove", event => { this.handlePan(event) }, false);
     }
 
     handleTapDown(event) {
