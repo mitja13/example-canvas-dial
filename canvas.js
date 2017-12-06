@@ -42,6 +42,10 @@ class Dial {
         if (this.hitTestButton(position)) {
             this.isMoving = true;
         }
+
+        if (this.hitTestDial(position)) {
+            this.degrees = this.getDegreesFrom(position);
+        }
     }
 
     handleTapUp(event) {
@@ -83,10 +87,13 @@ class Dial {
         return distance < 25;
     }
 
-    /* TODO
     hitTestDial(position) {
-
-    }*/
+        let center = { x: this.canvas.width/2, y: this.canvas.height/2 };
+        let dx = center.x - position.x;
+        let dy = center.y - position.y;
+        let distance = Math.sqrt(dx*dx + dy*dy);
+        return distance < this.radius + 15 && distance > this.radius - 15;
+    }
 
     draw() {
         let width = this.canvas.width;
