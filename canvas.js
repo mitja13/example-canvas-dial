@@ -11,7 +11,7 @@ window.onload = function() {
 
     DIAL = new Dial({
         radius: 100,
-		min: 0, max: 10, step: 1,
+		min: 0, max: 100, step: 1,
 		color: "lightgreen"
     })
     
@@ -125,8 +125,9 @@ class Dial {
         G.fillText(text, width/2 - textWidth/2, height/2 + 20);
 
         // draw 50 tick lines
-        for(let i = 0; i < 50; i++) {
-            let angle = 2*Math.PI / 50 * i;
+        let ticks = Math.round((this.max - this.min) / this.step) + this.step;
+        for(let i = 0; i < ticks; i++) {
+            let angle = 2*Math.PI / ticks * i;
             this.drawTick(angle);
         }
 
@@ -154,7 +155,7 @@ class Dial {
         let point2 = { x: center.y + point2X, y: center.y + point2Y };
         G.beginPath();
         G.strokeStyle = bodyStyle.backgroundColor;
-        G.lineWidth = 3;
+        G.lineWidth = this.max < 100 ? 3 : 1.5;
         G.moveTo(point1.x, point1.y);
         G.lineTo(point2.x, point2.y);
         G.stroke();
