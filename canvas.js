@@ -1,8 +1,8 @@
 //
 //  Dial Gauge Control
 //
-//  Created by Mitja Semolic on 6.12.2017.
-//  Copyright © 2017 Mitja Semolic. All rights reserved.
+//  MIT License
+//  Copyright © 2017 Mitja Semolic.
 //
 
 
