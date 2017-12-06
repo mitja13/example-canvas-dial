@@ -5,16 +5,17 @@ var G;
 var DIAL;
 
 window.onload = function() {
+    //TODO: container
     CANVAS = document.getElementById("canvas");
     G = canvas.getContext("2d");
 
-    //DIAL = new Dial(100, "lightgreen");
-
     DIAL = new Dial({
         radius: 100,
-		min: 1, max: 10, step: 1,
+		min: 0, max: 10, step: 1,
 		color: "lightgreen"
     })
+    
+    DIAL.value = 5;
     DIAL.listenEvents();
 }
 
@@ -27,11 +28,20 @@ class Dial {
         this.step = step;
         this.color = color;
 
-        this.dialColor = "silver";
-        this.text = "";
-        this.degrees = 200;
+        this.value = min;
+        this.degrees;
         this.isMoving = false;
+        this.dialColor = "silver";
     }
+
+    get value() {
+        let value = this.degrees * (this.max - this.min) / 360;
+        return Math.round(value * this.step) / this.step;
+    }
+
+    set value(value) {
+        this.degrees = value * 360 / (this.max - this.min);
+    } 
 
     listenEvents() {
         CANVAS.addEventListener("mousedown", event => { DIAL.handleTapDown(event) }, false);
@@ -110,9 +120,9 @@ class Dial {
         // text to display value
         G.fillStyle = this.color;
         G.font = "50px helvetica";
-        this.text = Math.floor(this.degrees/360*100) + '%';
-        let textWidth = G.measureText(this.text).width;
-        G.fillText(this.text, width/2 - textWidth/2, height/2 + 20);
+        let text = this.value;
+        let textWidth = G.measureText(text).width;
+        G.fillText(text, width/2 - textWidth/2, height/2 + 20);
 
         // draw 50 tick lines
         for(let i = 0; i < 50; i++) {
