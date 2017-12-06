@@ -19,7 +19,7 @@ class Dial {
         this.degrees;
         this.isMoving = false;
         this.dialColor = "silver";
-        this.showText = true;
+        this.showText = false;
     }
 
     get value() {
@@ -41,6 +41,7 @@ class Dial {
         let position = this.getPositionFrom(event);
         if (this.hitTestButton(position)) {
             this.isMoving = true;
+            this.showText = true;
         }
 
         if (this.hitTestDial(position)) {
@@ -50,6 +51,7 @@ class Dial {
 
     handleTapUp(event) {
         this.isMoving = false
+        this.showText = false;
     }
 
     handlePan(event) {
@@ -102,7 +104,7 @@ class Dial {
         let g = this.canvas.getContext("2d");
 
         // clear canvas everytime
-        g.clearRect(0, 0, width, height);
+        //TODO: clear() with clip
 
         // background circle
         g.beginPath();
@@ -164,21 +166,48 @@ class Dial {
         g.lineTo(point2.x, point2.y);
         g.stroke();
     }
+
+    clear() {
+        let width = this.canvas.width;
+        let height = this.canvas.height;
+        let g = this.canvas.getContext("2d");
+        g.clearRect(0, 0, width, height);
+        //TODO: clip
+    }
 }
 
-var DIAL;
+var DIALS;
 
 window.onload = function() {
 
-    DIAL = new Dial({
-        canvas: "canvas",
-        radius: 100,
-		min: 0, max: 25, step: 1,
-		color: "lightgreen"
-    });
-    
-    DIAL.value = 5;
-    DIAL.listenEvents();
+    DIALS = {
+        red: new Dial({
+            canvas: "canvas",
+            radius: 100,
+            min: 0, max: 25, step: 1,
+            color: "lightgreen" }),
+
+        green: new Dial({
+            canvas: "canvas",
+            radius: 150,
+            min: 0, max: 30, step: 1,
+            color: "lightcoral" }),
+        
+        blue: new Dial({
+            canvas: "canvas",
+            radius: 200,
+            min: 0, max: 60, step: 1,
+            color: "deepskyblue"
+            })
+    }
+
+    DIALS.red.value = 10;
+    DIALS.green.value = 20;
+    DIALS.blue.value = 30;
+
+    DIALS.red.listenEvents();
+    DIALS.green.listenEvents();
+    DIALS.blue.listenEvents();
 }
 
 // get interval to draw on screen
@@ -191,7 +220,13 @@ window.requestAnimFrame = (function() {
         function(callback) { window.setTimeout(callback, 1000 / 60) };
 })();
 
-(function loopDraw() {
-    if (DIAL != undefined) DIAL.draw();
+(function loopDraw() {    
+    if (DIALS != undefined) {
+        DIALS.blue.clear();
+        DIALS.red.draw();
+        DIALS.green.draw();
+        DIALS.blue.draw();
+    }
+
     requestAnimFrame(loopDraw);
 })();
